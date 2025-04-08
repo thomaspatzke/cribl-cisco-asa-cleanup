@@ -1,3 +1,5 @@
-size: 43520
+id: asa_parsing.csv
+size: 42937
 description: Matching ASA codes will have the regex applied for field extraction
-rows: 184
+rows: 168
+version: tlPQzP1w

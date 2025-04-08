@@ -53,6 +53,7 @@ functions:
         - dest_country
         - src_en
         - dest_en
+        - host
     groupId: FiV2mI
     description: List index time fields you want in tstats searches, data models,
       etc in keep fields below

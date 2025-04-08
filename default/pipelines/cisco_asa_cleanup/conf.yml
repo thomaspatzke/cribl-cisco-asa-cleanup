@@ -131,6 +131,16 @@ functions:
     disabled: null
     conf:
       comment: Pull regex from the lookup table, and extract fields
+  - id: eval
+    filter: "true"
+    disabled: true
+    conf:
+      add:
+        - disabled: false
+          name: __regex
+          value: C.vars.cisco_asa_parsing[`${asa_code}`]
+    groupId: JE4Inc
+    final: false
   - id: lookup
     filter: "true"
     disabled: false
@@ -164,6 +174,7 @@ functions:
         - groups
     groupId: JE4Inc
     description: Use resulting regex to extract fields, and clean up some
+    final: false
   - id: rename
     filter: "!_no_matches"
     disabled: false
@@ -318,7 +329,8 @@ functions:
     filter: "true"
     disabled: null
     conf:
-      comment: Choose your destination style
+      comment: Choose your destination style, or leave as _raw + json (leave all
+        disabled)
   - id: chain
     filter: "true"
     disabled: true
@@ -328,7 +340,7 @@ functions:
     groupId: sf9vO1
   - id: chain
     filter: "true"
-    disabled: false
+    disabled: true
     conf:
       processor: prep_for_splunk
     groupId: sf9vO1
@@ -345,4 +357,5 @@ functions:
     disabled: true
     conf: {}
     final: true
-    description: STOP HERE FOR DEBUGGING
+    description: Drag n drop this function to create an easy stop point for
+      debugging purposes
