@@ -3,6 +3,8 @@
 
 This pack uses lookup files to help drop events, suppress events, and extract fields from surviving events. Using lookup files provides a much cleaner management of potentially hundreds, or thousands, of event types. 
 
+Regex patterns and explanations are initially based on [Cisco's docs](https://www.cisco.com/c/en/us/td/docs/security/asa/syslog/asa-syslog/syslog-messages-101001-to-199021.html).
+
 * **For Splunk Delivery**: You can either leave (some of) the fields as index time useful for tstats, accelerated data models, etc. Or you you can re-write _raw as a JSON object with the newly extracted fields. Splunk delivery is set-up in `prep_for_splunk`, a pipeline chained from the `cisco_asa_cleanup` pipeline by default.
 
 * **For Elastic Delivery**: A lookup is used to translate field naming convention from Splunk CIM to Elastic ECS. This lookup is called from the `prep_for_ECS` pipeline, which is optionally chained from the `cisco_asa_cleanup` pipeline.
@@ -32,11 +34,12 @@ Before you activate the Pack on live data:
     * Format is `asa_code`,`"comment or memo"`
     * There are 29 codes included by default based on previous experience. YMMV.
 * The **asa_parsing.csv** file will need to have codes + regex extractions for the fields you require
-    * Format is `asa_code`,`"regex_with_named_capture_group(s)"`
+    * Format is `asa_code`,`"regex_with_named_capture_group(s)"`, `explanation`
     * The field `_no_matches` will be added to each event with a regex defined
         * If no matches are found, it will be `true` meaning the regex failed
     * If a regex uses the same named group twice (eg, `(?<group>foo)|(?<group>bar)`) you'll need to name the second with _ALT. Eg: `group_ALT`. This will be undone after extraction automatically.
-    * There are 150+ codes included by default based on previous experience. YMMV.
+    * As of v1.2.0 all known ASA log codes are included with help from AI
+        * The originals remain the same, only the newly added codes as of v1.2 were created with assist from AI
     * We attempted to maintain compliance with the Splunk CIM in naming fields
 * The **asa_suppress.csv** file contains ASA codes that should only be allowed 1 event per 30 seconds per worker process
     * There are 2 codes included by default based on previous experience. YMMV.
@@ -74,6 +77,11 @@ Fields extracted are placed at the top level of the event (eg, metadata or index
 
 
 ## Release Notes
+
+### Version 1.2.0 - 2026-06-16
+    - Thanks to @thomaspatzke for updating and fixing the following codes: 106014, 106015, 106023, 106027, 110002, 113005, 113012, 303002, 313004, 313005, 419002, 434002, 434004, 725001, 725002 
+    - Added all other available codes from Cisco docs
+    - Added explanations as provied in the Cisco docs into the CSV as column 3
 
 ### Version 1.1.16 - 2025-04-08
     - Repaired regex for 302014, 302016, 302020, 302021, 419002, 434002, 434004
